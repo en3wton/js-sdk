@@ -108,16 +108,23 @@ export default class Client {
      */
     readonly realtime: Realtime;
 
+    /**
+     * An implementation of fetch to use for making requests.
+     */
+    readonly fetchImpl?: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
+
     private cancelControllers: { [key: string]: AbortController } = {}
 
     constructor(
         baseUrl = '/',
         lang = 'en-US',
         authStore?: BaseAuthStore | null,
+        fetchImpl?: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>
     ) {
         this.baseUrl   = baseUrl;
         this.lang      = lang;
         this.authStore = authStore || new LocalAuthStore();
+        this.fetchImpl = fetchImpl
 
         // services
         this.admins      = new Admins(this);
@@ -288,7 +295,7 @@ export default class Client {
         }
 
         // send the request
-        return fetch(url, config)
+        return (this.fetchImpl ?? fetch)(url, config)
             .then(async (response) => {
                 let data : any = {};
 

@@ -652,8 +652,12 @@ declare class Client {
      * An instance of the service that handles the **Realtime APIs**.
      */
     readonly realtime: Realtime;
+    /**
+     * An implementation of fetch to use for making requests.
+     */
+    readonly fetchImpl?: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
     private cancelControllers;
-    constructor(baseUrl?: string, lang?: string, authStore?: BaseAuthStore | null);
+    constructor(baseUrl?: string, lang?: string, authStore?: BaseAuthStore | null, fetchImpl?: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>);
     /**
      * @deprecated Legacy alias for `this.authStore`.
      */
